@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap');
+@import "tailwindcss";
+
+/* Custom Maroon Color Palette */
+@layer base {
+  :root {
+    --color-maroon-50: #fdf2f2;
+    --color-maroon-100: #fce8e8;
+    --color-maroon-200: #fbd5d5;
+    --color-maroon-300: #f8b4b4;
+    --color-maroon-400: #f98080;
+    --color-maroon-500: #f05252;
+    --color-maroon-600: #e02424;
+    --color-maroon-700: #c81e1e;
+    --color-maroon-800: #9b1c1c;
+    --color-maroon-900: #771d1d;
+    --color-maroon-950: #571212;
+  }
+}
+
+/* Apply maroon colors to Tailwind */
+@layer utilities {
+  .bg-maroon-50 { background-color: var(--color-maroon-50); }
+  .bg-maroon-100 { background-color: var(--color-maroon-100); }
+  .bg-maroon-200 { background-color: var(--color-maroon-200); }
+  .bg-maroon-300 { background-color: var(--color-maroon-300); }
+  .bg-maroon-400 { background-color: var(--color-maroon-400); }
+  .bg-maroon-500 { background-color: var(--color-maroon-500); }
+  .bg-maroon-600 { background-color: var(--color-maroon-600); }
+  .bg-maroon-700 { background-color: var(--color-maroon-700); }
+  .bg-maroon-800 { background-color: var(--color-maroon-800); }
+  .bg-maroon-900 { background-color: var(--color-maroon-900); }
+  .bg-maroon-950 { background-color: var(--color-maroon-950); }
+
+  .text-maroon-50 { color: var(--color-maroon-50); }
+  .text-maroon-100 { color: var(--color-maroon-100); }
+  .text-maroon-200 { color: var(--color-maroon-200); }
+  .text-maroon-300 { color: var(--color-maroon-300); }
+  .text-maroon-400 { color: var(--color-maroon-400); }
+  .text-maroon-500 { color: var(--color-maroon-500); }
+  .text-maroon-600 { color: var(--color-maroon-600); }
+  .text-maroon-700 { color: var(--color-maroon-700); }
+  .text-maroon-800 { color: var(--color-maroon-800); }
+  .text-maroon-900 { color: var(--color-maroon-900); }
+  .text-maroon-950 { color: var(--color-maroon-950); }
+
+  .border-maroon-200 { border-color: var(--color-maroon-200); }
+  .border-maroon-700 { border-color: var(--color-maroon-700); }
+
+  .font-sans {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .font-serif {
+    font-family: 'Merriweather', Georgia, serif;
+  }
+}
+
+a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
