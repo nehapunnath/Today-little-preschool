@@ -8,6 +8,8 @@ import Footer from './Components/Footer'
 import About from './Pages/About'
 import Academics from './Pages/Academics'
 import Facilities from './Pages/Facilities'
+import Events from './Pages/Events'
+import Contact from './Pages/Contact'
 
 function App() {
 
@@ -19,6 +21,8 @@ function App() {
       <Route path='/about' element={<About/>}/>
       <Route path='/academics' element={<Academics/>}/>
       <Route path='/facilities' element={<Facilities/>}/>
+      <Route path='/events' element={<Events/>}/>
+      <Route path='/contact' element={<Contact/>}/>
 
     </Routes>
     <Footer/>
