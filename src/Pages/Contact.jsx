@@ -14,7 +14,7 @@ const Contact = () => {
       icon: <FaMapMarkerAlt className="text-3xl" />,
       title: "Our Address",
       details: [
-        "Today Little Preschool",
+        "Little Vile Preschool",
         "Kachinayakanahalli",
         "Near Community Park",
         "Bangalore - 560077",
@@ -37,7 +37,7 @@ const Contact = () => {
       icon: <FaEnvelope className="text-3xl" />,
       title: "Email Addresses",
       details: [
-        "info@todaylittlepreschool.com",
+        "info@littlevilepreschool.com",
 
       ],
       action: "Send Email",
@@ -66,7 +66,7 @@ const Contact = () => {
             </h1>
             <div className="w-32 h-1 bg-white mx-auto mb-8"></div>
             <p className="text-xl md:text-2xl mb-8 text-maroon-100">
-              Get in Touch with Today Little Preschool
+              Get in Touch with Little Vile Preschool
             </p>
             <p className="text-lg max-w-3xl mx-auto text-maroon-100">
               We're here to answer your questions and help you with admissions, 

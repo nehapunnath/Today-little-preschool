@@ -64,7 +64,7 @@ const About = () => {
               Building foundations for lifelong learning since 2015
             </p>
             <p className="text-lg max-w-3xl mx-auto text-maroon-100">
-              Today Little Preschool in Kachinayakanahalli is more than just a preschool - 
+             Little Vile Preschool in Kachinayakanahalli is more than just a preschool - 
               it's a nurturing community dedicated to helping children blossom during their 
               most formative years.
             </p>
@@ -84,7 +84,7 @@ const About = () => {
               <div className="space-y-4 text-maroon-800">
                 <p className="text-lg">
                   Founded in 2015 by Mrs. Anjali Rao, a passionate educator with over 
-                  15 years of experience, Today Little Preschool began with a simple vision: 
+                  15 years of experience, Little Vile Preschool began with a simple vision: 
                   to create a learning environment where children feel loved, safe, and 
                   excited to learn.
                 </p>
@@ -113,7 +113,7 @@ const About = () => {
                   </h3>
                 </div>
                 <blockquote className="text-maroon-800 italic text-lg leading-relaxed">
-                  "When I started Today Little Preschool, I dreamed of a place where children's 
+                  "When I started Little Vile Preschool, I dreamed of a place where children's 
                   laughter would mix with learning, where curiosity would be celebrated, and 
                   where every child would feel seen and valued. A decade later, that dream 
                   continues to guide everything we do."
@@ -221,7 +221,7 @@ const About = () => {
             </h2>
             <div className="w-24 h-1 bg-maroon-600 mx-auto mb-8"></div>
             <p className="text-lg text-maroon-800 max-w-2xl mx-auto">
-              The guiding principles that shape everything we do at Today Little Preschool
+              The guiding principles that shape everything we do at Little Vile Preschool
             </p>
           </div>
           
@@ -370,57 +370,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Contact Information */}
-      {/* <section className="py-16 bg-gradient-to-r from-maroon-800 to-maroon-900">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold font-serif mb-4 text-white">
-                Visit Our Campus
-              </h2>
-              <div className="w-24 h-1 bg-white mx-auto mb-8"></div>
-              <p className="text-lg max-w-2xl mx-auto text-maroon-100">
-                Come see our facilities and meet our team
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-xl">
-                <FaMapMarkerAlt className="text-4xl text-white mx-auto mb-4" />
-                <h3 className="text-xl font-bold font-serif mb-3 text-white">Location</h3>
-                <p className="text-maroon-100">
-                  Today Little Preschool<br />
-                  Kachinayakanahalli<br />
-                  Near Community Park<br />
-                  Bangalore - 560077
-                </p>
-              </div>
-              
-              <div className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-xl">
-                <FaPhone className="text-4xl text-white mx-auto mb-4" />
-                <h3 className="text-xl font-bold font-serif mb-3 text-white">Contact</h3>
-                <p className="text-maroon-100">
-                  <strong>Phone:</strong> +91 98765 43210<br />
-                  <strong>Email:</strong> info@todaylittlepreschool.com
-                </p>
-              </div>
-              
-              <div className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-xl">
-                <FaClock className="text-4xl text-white mx-auto mb-4" />
-                <h3 className="text-xl font-bold font-serif mb-3 text-white">Hours</h3>
-                <p className="text-maroon-100">
-                  <strong>Monday - Friday:</strong><br />
-                  8:30 AM - 12:30 PM<br />
-                  <strong>Saturday:</strong><br />
-                  9:00 AM - 11:00 AM (Activities)
-                </p>
-              </div>
-            </div>
-            
-            
-          </div>
-        </div>
-      </section> */}
+     
     </div>
   );
 };

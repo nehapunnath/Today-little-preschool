@@ -165,7 +165,7 @@ const Home = () => {
     {
       name: "Priya Sharma",
       child: "Mother of Arjun (Age 4)",
-      content: "Today Little Preschool has been wonderful for my son. The teachers are caring and the environment is perfect for early learning.",
+      content: "Little Vile Preschool has been wonderful for my son. The teachers are caring and the environment is perfect for early learning.",
       rating: 5
     },
     {
@@ -210,22 +210,12 @@ const Home = () => {
           >
             <img
               src={image}
-              alt={`Preschool activity ${index + 1}`}
+              alt={`Preschool activity `}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-maroon-900/70 to-maroon-800/50">
               <div className="container mx-auto px-4 h-full flex items-center">
-                {/* <div className="max-w-2xl text-white">
-                  <h1 className="text-5xl md:text-6xl font-bold font-serif mb-4">
-                    Welcome to Today Little Preschool
-                  </h1>
-                  <p className="text-xl md:text-2xl text-maroon-100 font-sans mb-6">
-                    Where little minds grow, learn, and blossom in Kachinayakanahalli
-                  </p>
-                  <button className="bg-white text-maroon-800 hover:bg-maroon-50 font-bold py-3 px-8 rounded-lg transition-colors">
-                    Schedule a Visit
-                  </button>
-                </div> */}
+                
               </div>
             </div>
           </div>
@@ -286,12 +276,12 @@ const Home = () => {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold text-maroon-900 font-serif mb-4">
-                About Today Little Preschool
+                About Little Vile Preschool
               </h2>
               <div className="w-24 h-1 bg-maroon-600 mx-auto mb-8"></div>
               <p className="text-lg text-maroon-800 font-sans leading-relaxed max-w-3xl mx-auto">
                 Established with a vision to provide exceptional early childhood education, 
-                Today Little Preschool in Kachinayakanahalli is dedicated to creating a 
+                Little Vile Preschool in Kachinayakanahalli is dedicated to creating a 
                 foundation for lifelong learning through love, care, and innovative teaching methods.
               </p>
             </div>
@@ -372,7 +362,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-maroon-900 font-serif mb-4">
-              Why Choose Today Little Preschool?
+              Why Choose Little Vile Preschool?
             </h2>
             <div className="w-24 h-1 bg-maroon-600 mx-auto mb-8"></div>
             <p className="text-lg text-maroon-800 font-sans max-w-2xl mx-auto">

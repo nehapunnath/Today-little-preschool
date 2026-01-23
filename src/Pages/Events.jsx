@@ -153,7 +153,7 @@ const Events = () => {
               Celebrating Learning, Fun, and Togetherness
             </p>
             <p className="text-lg max-w-3xl mx-auto text-maroon-100">
-              Relive past memories and join us for upcoming exciting events at Today Little Preschool
+              Relive past memories and join us for upcoming exciting events at Little Vile Preschool
             </p>
           </div>
         </div>

@@ -26,7 +26,7 @@ const Footer = () => {
     { 
       icon: <FaMapMarkerAlt className="text-maroon-400" />, 
       title: 'Our Location', 
-      content: 'Today Little Preschool, Kachinayakanahalli' 
+      content: 'Little Vile Preschool, Kachinayakanahalli' 
     },
     { 
       icon: <FaPhone className="text-maroon-400" />, 
@@ -36,7 +36,7 @@ const Footer = () => {
     { 
       icon: <FaEnvelope className="text-maroon-400" />, 
       title: 'Email Address', 
-      content: 'contact@todaylittlepreschool.com' 
+      content: 'contact@littlevilepreschool.com' 
     },
     { 
       icon: <FaClock className="text-maroon-400" />, 
@@ -56,8 +56,8 @@ const Footer = () => {
             <div className="flex items-center space-x-3">
               
               <div>
-                <h3 className="text-2xl font-bold font-serif">Today Little Preschool</h3>
-                <p className="text-maroon-200 font-sans">Kachinayakanahalli</p>
+                <h3 className="text-2xl font-bold font-serif">Little Vile Preschool</h3>
+                <p className="text-maroon-200 font-sans">A Premium Preschool</p>
               </div>
             </div>
             <p className="text-maroon-100 font-sans leading-relaxed">

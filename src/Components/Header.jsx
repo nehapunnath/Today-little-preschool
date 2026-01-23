@@ -36,8 +36,11 @@ const Header = () => {
             
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-maroon-900 font-serif">
-                Today Little Preschool
+                Little Vile 
               </h1>
+              <p className="text-maroon-600 text-lg font-sans italic tracking-wide">
+                A Premium Preschool
+              </p>
               
             </div>
           </div>

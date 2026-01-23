@@ -239,7 +239,7 @@ const Academics = () => {
               Nurturing Young Minds Through a Comprehensive Curriculum
             </p>
             <p className="text-lg max-w-3xl mx-auto text-maroon-100">
-              At Today Little Preschool, we believe in providing a balanced academic 
+              At Little Vile Preschool, we believe in providing a balanced academic 
               foundation that combines structured learning with creative exploration, 
               preparing children for lifelong success.
             </p>

@@ -204,7 +204,7 @@ const Facilities = () => {
               Designed for Learning, Safety, and Fun
             </p>
             <p className="text-lg max-w-3xl mx-auto text-maroon-100">
-              At Today Little Preschool, we provide state-of-the-art facilities specifically 
+              At Little Vile Preschool, we provide state-of-the-art facilities specifically 
               designed to nurture young minds in a safe, stimulating, and joyful environment.
             </p>
           </div>
