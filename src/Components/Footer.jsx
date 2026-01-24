@@ -20,6 +20,8 @@ const Footer = () => {
     { name: 'Facilities', path: '/facilities' },
     { name: 'Events', path: '/events' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Login', path: '/login' },
+
   ];
 
   const contactInfo = [
