@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { FaUser, FaLock, FaEye, FaEyeSlash, FaSignInAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import AuthApi from '../service/Authapi';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,42 +47,35 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  
+  const validationErrors = validateForm();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
+  
+  setIsLoading(true);
+  setErrors({});
+  
+  try {
+    const response = await AuthApi.login(formData.email, formData.password);
     
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+    console.log('Login successful:', response);
     
-    setIsLoading(true);
+    // Redirect to admin gallery (assuming this is the main admin page)
+    navigate('/admin/gallery');
     
-    try {
-      // Here you would make an API call to your backend
-      console.log('Login attempt with:', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // For demo purposes - successful login
-      alert('Login successful! (Demo)');
-      // In real app, you would:
-      // 1. Store authentication token
-      // 2. Redirect to admin dashboard
-      // 3. Update user state
-      
-    } catch (error) {
-      console.error('Login error:', error);
-      setErrors({ general: 'Invalid email or password' });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleForgotPassword = () => {
-    // Redirect to forgot password page or show modal
-    alert('Forgot password feature coming soon!');
-  };
+  } catch (error) {
+    console.error('Login error:', error);
+    setErrors({ 
+      general: error.message || 'Invalid email or password. Please try again.' 
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-maroon-50 to-maroon-100 flex items-center justify-center p-4">
@@ -88,13 +84,8 @@ const Login = () => {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
           <div className="bg-maroon-900 text-white p-8 text-center">
-            {/* <div className="flex justify-center mb-4">
-              <div className="bg-white/20 p-4 rounded-full">
-                <FaUser className="text-2xl" />
-              </div>
-            </div> */}
             <h1 className="text-3xl font-bold font-serif mb-2">Login</h1>
-            {/* <p className="text-maroon-200 font-sans">Little Vile Preschool Dashboard</p> */}
+            <p className="text-maroon-200">Welcome to Little Ville Preschool Admin</p>
           </div>
 
           {/* Login Form */}
@@ -124,8 +115,9 @@ const Login = () => {
                     className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-maroon-500 focus:border-transparent transition-all ${
                       errors.email ? 'border-red-300' : 'border-maroon-200'
                     }`}
-                    placeholder="admin@littlevile.com"
+                    placeholder="admin@littleville.com"
                     disabled={isLoading}
+                    autoComplete="email"
                   />
                 </div>
                 {errors.email && (
@@ -139,7 +131,7 @@ const Login = () => {
                   <label htmlFor="password" className="block text-sm font-medium text-maroon-800 font-sans">
                     Password
                   </label>
-
+                 
                 </div>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -156,6 +148,7 @@ const Login = () => {
                     }`}
                     placeholder="••••••••"
                     disabled={isLoading}
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
@@ -194,10 +187,8 @@ const Login = () => {
               </button>
             </form>
 
-
+           
           </div>
-
-       
         </div>
 
         {/* Back to Home Link */}
