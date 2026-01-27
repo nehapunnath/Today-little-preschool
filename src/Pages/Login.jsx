@@ -115,7 +115,7 @@ const Login = () => {
                     className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-maroon-500 focus:border-transparent transition-all ${
                       errors.email ? 'border-red-300' : 'border-maroon-200'
                     }`}
-                    placeholder="admin@littleville.com"
+                    // placeholder="admin@littleville.com"
                     disabled={isLoading}
                     autoComplete="email"
                   />
@@ -146,7 +146,7 @@ const Login = () => {
                     className={`w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-2 focus:ring-maroon-500 focus:border-transparent transition-all ${
                       errors.password ? 'border-red-300' : 'border-maroon-200'
                     }`}
-                    placeholder="••••••••"
+                    // placeholder="••••••••"
                     disabled={isLoading}
                     autoComplete="current-password"
                   />
