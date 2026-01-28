@@ -1,74 +1,83 @@
 import { useState, useEffect } from 'react';
 import { 
-  FaPlus, 
-  FaUpload, 
-  FaTrash, 
-  FaTimes,
-  FaImage,
-  FaChevronLeft,
-  FaChevronRight,
-  FaSpinner,
-  FaTimesCircle
+  FaPlus, FaUpload, FaTrash, FaTimes,
+  FaImage, FaChevronLeft, FaChevronRight,
+  FaSpinner, FaTimesCircle, FaEdit, FaSignOutAlt
 } from 'react-icons/fa';
+import GalleryApi from '../service/GalleryApi'; 
+import { useNavigate } from 'react-router-dom';   
 
 const AdminGallery = () => {
   const [images, setImages] = useState([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [editFile, setEditFile] = useState(null);
+  const [editPreviewUrl, setEditPreviewUrl] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const imagesPerPage = 8;
+  const navigate = useNavigate();
 
-  // Mock initial data
-  const mockImages = [
-    {
-      id: 1,
-      url: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&q=80',
-      date: '2024-01-15',
-      name: 'art-class.jpg'
-    },
-    {
-      id: 2,
-      url: 'https://images.unsplash.com/photo-1541692641319-981cc79ee10a?w=800&q=80',
-      date: '2024-01-10',
-      name: 'playground.jpg'
-    },
-    {
-      id: 3,
-      url: 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=800&q=80',
-      date: '2024-01-08',
-      name: 'music-session.jpg'
-    }
-  ];
-
-  // Load initial images
-  useEffect(() => {
-    const loadImages = async () => {
+  
+useEffect(() => {
+  const fetchImages = async () => {
+    try {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setImages(mockImages);
-      setLoading(false);
-    };
-    loadImages();
-  }, []);
+      setError(null);
+      const fetchedImages = await GalleryApi.getAllImages();
+      
+      const formatted = fetchedImages.map(img => {
+        let dateStr = 'Unknown date';
 
-  // Handle file selection
+        if (img.uploadedAt && typeof img.uploadedAt === 'string') {
+          dateStr = img.uploadedAt;
+        }
+        else if (typeof img.timestamp === 'number' && !isNaN(img.timestamp)) {
+          try {
+            dateStr = new Date(img.timestamp).toISOString().split('T')[0];
+          } catch {
+            dateStr = 'Invalid date';
+          }
+        }
+
+        return {
+          id: img.id,
+          url: img.url,
+          name: img.name,
+          date: dateStr,
+        };
+      });
+
+      setImages(formatted);
+    } catch (err) {
+      console.error('Failed to load gallery:', err);
+      setError(err.message || 'Failed to load gallery images');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchImages();
+}, []);
+
+  // File selection for upload
   const handleFileSelect = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file (JPG, PNG, GIF, etc.)');
       return;
     }
-
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert('File size should be less than 5MB');
       return;
@@ -76,13 +85,31 @@ const AdminGallery = () => {
 
     setSelectedFile(file);
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewUrl(reader.result);
-    };
+    reader.onloadend = () => setPreviewUrl(reader.result);
     reader.readAsDataURL(file);
   };
 
-  // Handle upload
+  // File selection for replace/edit
+  const handleEditFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size should be less than 5MB');
+      return;
+    }
+
+    setEditFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setEditPreviewUrl(reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  // Upload new image
   const handleUpload = async () => {
     if (!selectedFile) {
       alert('Please select an image to upload');
@@ -90,63 +117,91 @@ const AdminGallery = () => {
     }
 
     setUploading(true);
-
     try {
-      // Simulate upload process
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      const newImage = {
-        id: images.length + 1,
-        url: previewUrl,
-        date: new Date().toISOString().split('T')[0],
-        name: selectedFile.name
-      };
-
-      setImages(prev => [newImage, ...prev]);
+      const newImage = await GalleryApi.uploadImage(selectedFile);
       
-      // Reset form
+      setImages(prev => [newImage, ...prev]);
+      setIsUploadModalOpen(false);
       setSelectedFile(null);
       setPreviewUrl('');
-      setIsUploadModalOpen(false);
-      
       alert('Image uploaded successfully!');
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert('Failed to upload image. Please try again.');
+    } catch (err) {
+      alert(err.message || 'Failed to upload image');
     } finally {
       setUploading(false);
     }
   };
 
-  // Handle delete
-  const handleDelete = (image) => {
-    setSelectedImage(image);
-    setIsDeleteModalOpen(true);
+  // Replace existing image
+  const saveEdit = async () => {
+    if (!selectedImage || !editFile) {
+      alert('Please select a new image to replace the existing one');
+      return;
+    }
+
+    setEditing(true);
+    try {
+      const updatedImage = await GalleryApi.replaceImage(selectedImage.id, editFile);
+      
+      setImages(prev => 
+        prev.map(img => 
+          img.id === selectedImage.id ? updatedImage : img
+        )
+      );
+
+      setIsEditModalOpen(false);
+      setSelectedImage(null);
+      setEditFile(null);
+      setEditPreviewUrl('');
+      alert('Image replaced successfully!');
+    } catch (err) {
+      alert(err.message || 'Failed to replace image');
+    } finally {
+      setEditing(false);
+    }
   };
 
-  // Confirm delete
+  // Delete image
   const confirmDelete = async () => {
     if (!selectedImage) return;
 
     setDeleting(true);
     try {
-      // Simulate delete process
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await GalleryApi.deleteImage(selectedImage.id);
       setImages(prev => prev.filter(img => img.id !== selectedImage.id));
       setIsDeleteModalOpen(false);
       setSelectedImage(null);
-      
       alert('Image deleted successfully!');
-    } catch (error) {
-      console.error('Delete error:', error);
-      alert('Failed to delete image. Please try again.');
+    } catch (err) {
+      alert(err.message || 'Failed to delete image');
     } finally {
       setDeleting(false);
     }
   };
 
-  // Pagination
+  // Open edit modal
+  const handleEdit = (image) => {
+    setSelectedImage(image);
+    setEditFile(null);
+    setEditPreviewUrl('');
+    setIsEditModalOpen(true);
+  };
+
+  // Open delete confirmation
+  const handleDelete = (image) => {
+    setSelectedImage(image);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user');
+      navigate('/login');
+    }
+  };
+
+  // Pagination logic
   const indexOfLastImage = currentPage * imagesPerPage;
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
   const currentImages = images.slice(indexOfFirstImage, indexOfLastImage);
@@ -160,26 +215,45 @@ const AdminGallery = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold font-serif">Gallery Management</h1>
-              <p className="text-maroon-200 font-sans mt-1">Little Vile Preschool - Admin Panel</p>
+              <p className="text-maroon-200 font-sans mt-1">Little Ville Preschool - Admin Panel</p>
             </div>
-            <button
-              onClick={() => setIsUploadModalOpen(true)}
-              className="mt-4 md:mt-0 bg-white text-maroon-900 hover:bg-maroon-50 font-medium py-2 px-6 rounded-lg transition-colors flex items-center space-x-2"
-            >
-              <FaPlus />
-              <span>Upload Image</span>
-            </button>
+            <div className="flex items-center space-x-4 mt-4 md:mt-0 gap-10">
+              
+              <button
+                onClick={() => setIsUploadModalOpen(true)}
+                className="bg-white text-maroon-900 hover:bg-maroon-50 font-medium py-2 px-6 rounded-lg transition-colors flex items-center space-x-2"
+              >
+                <FaPlus />
+                <span>Upload Image</span>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-sans"
+              >
+                <FaSignOutAlt />
+                <span>Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="container mx-auto p-4 md:p-6">
-        {/* Gallery Grid */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <FaSpinner className="animate-spin text-4xl text-maroon-600" />
             <span className="ml-3 text-maroon-700 font-sans">Loading gallery...</span>
+          </div>
+        ) : error ? (
+          <div className="text-center py-16 text-red-600">
+            <p className="text-xl font-bold">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="mt-4 px-6 py-2 bg-maroon-600 text-white rounded-lg"
+            >
+              Retry
+            </button>
           </div>
         ) : images.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-xl shadow-sm">
@@ -201,30 +275,34 @@ const AdminGallery = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
               {currentImages.map((image) => (
                 <div key={image.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  {/* Image */}
                   <div className="relative h-48 overflow-hidden group">
                     <img
                       src={image.url}
-                      alt="Gallery image"
+                      alt={image.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => { e.target.src = '/fallback-image.jpg'; }} // optional fallback
                     />
-                    
-                    {/* Delete Button */}
-                    <button
-                      onClick={() => handleDelete(image)}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
-                      title="Delete image"
-                    >
-                      <FaTrash className="text-sm" />
-                    </button>
+                    <div className="absolute top-2 right-2 flex space-x-2">
+                      <button
+                        onClick={() => handleEdit(image)}
+                        className="bg-blue-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-600"
+                        title="Replace image"
+                      >
+                        <FaEdit className="text-sm" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(image)}
+                        className="bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                        title="Delete image"
+                      >
+                        <FaTrash className="text-sm" />
+                      </button>
+                    </div>
                   </div>
-
-                  {/* Details */}
                   <div className="p-4">
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="font-sans text-sm text-gray-600 truncate">{image.name}</p>
-                        <p className="font-sans text-xs text-gray-400 mt-1">Uploaded: {image.date}</p>
                       </div>
                     </div>
                   </div>
@@ -269,10 +347,7 @@ const AdminGallery = () => {
               </div>
             )}
 
-            {/* Summary */}
-            <div className="mt-8 text-center text-gray-600 font-sans">
-              Showing {currentImages.length} of {images.length} images
-            </div>
+            
           </>
         )}
       </div>
@@ -281,7 +356,6 @@ const AdminGallery = () => {
       {isUploadModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
-            {/* Modal Header */}
             <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
               <h2 className="text-2xl font-bold text-maroon-900 font-serif">Upload Image</h2>
               <button
@@ -293,9 +367,7 @@ const AdminGallery = () => {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="p-6">
-              {/* File Upload Area */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2 font-sans">
                   Select Image
@@ -330,18 +402,14 @@ const AdminGallery = () => {
                           </button>
                         </div>
                         <p className="text-sm text-gray-600">
-                          {selectedFile?.name} ({(selectedFile?.size / (1024 * 1024)).toFixed(2)} MB)
+                          {selectedFile?.name} ({(selectedFile?.size / 1024 / 1024).toFixed(2)} MB)
                         </p>
                       </div>
                     ) : (
                       <>
                         <FaUpload className="text-4xl text-gray-400 mx-auto mb-4" />
-                        <p className="text-gray-600 mb-2 font-sans">
-                          Click to select an image
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Supports JPG, PNG, GIF • Max 5MB
-                        </p>
+                        <p className="text-gray-600 mb-2 font-sans">Click to select an image</p>
+                        <p className="text-sm text-gray-500">JPG, PNG, GIF • Max 5MB</p>
                       </>
                     )}
                   </label>
@@ -349,7 +417,6 @@ const AdminGallery = () => {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6 flex justify-end space-x-4">
               <button
                 onClick={() => setIsUploadModalOpen(false)}
@@ -380,7 +447,125 @@ const AdminGallery = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Edit Modal */}
+      {isEditModalOpen && selectedImage && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-maroon-900 font-serif">Replace Image</h2>
+              <button
+                onClick={() => {
+                  setIsEditModalOpen(false);
+                  setSelectedImage(null);
+                  setEditFile(null);
+                  setEditPreviewUrl('');
+                }}
+                className="text-gray-400 hover:text-gray-600"
+                disabled={editing}
+              >
+                <FaTimes className="text-xl" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-700 mb-3 font-sans">Current Image</h3>
+                <div className="border border-gray-200 rounded-lg p-3">
+                  <img
+                    src={selectedImage.url}
+                    alt="Current"
+                    className="w-full h-48 object-cover rounded-lg mb-2"
+                  />
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600 font-sans">{selectedImage.name}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-700 mb-3 font-sans">Select New Image</h3>
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors">
+                  <input
+                    type="file"
+                    id="edit-file-upload"
+                    accept="image/*"
+                    onChange={handleEditFileSelect}
+                    className="hidden"
+                    disabled={editing}
+                  />
+                  <label htmlFor="edit-file-upload" className="cursor-pointer">
+                    {editPreviewUrl ? (
+                      <div className="space-y-4">
+                        <div className="relative mx-auto">
+                          <img
+                            src={editPreviewUrl}
+                            alt="New preview"
+                            className="w-full h-48 object-cover rounded-lg"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditPreviewUrl('');
+                              setEditFile(null);
+                            }}
+                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
+                            disabled={editing}
+                          >
+                            <FaTimesCircle />
+                          </button>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          {editFile?.name} ({(editFile?.size / 1024 / 1024).toFixed(2)} MB)
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        <FaUpload className="text-4xl text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-600 mb-2 font-sans">Click to select replacement image</p>
+                        <p className="text-sm text-gray-500">JPG, PNG, GIF • Max 5MB</p>
+                      </>
+                    )}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6 flex justify-end space-x-4">
+              <button
+                onClick={() => {
+                  setIsEditModalOpen(false);
+                  setSelectedImage(null);
+                  setEditFile(null);
+                  setEditPreviewUrl('');
+                }}
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-sans"
+                disabled={editing}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveEdit}
+                disabled={editing || !editFile}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-sans flex items-center space-x-2"
+              >
+                {editing ? (
+                  <>
+                    <FaSpinner className="animate-spin" />
+                    <span>Replacing...</span>
+                  </>
+                ) : (
+                  <>
+                    <FaEdit />
+                    <span>Replace Image</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation */}
       {isDeleteModalOpen && selectedImage && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
@@ -390,10 +575,8 @@ const AdminGallery = () => {
                 Delete Image?
               </h2>
               <p className="text-gray-600 font-sans mb-6">
-                Are you sure you want to delete this image?
-                <br />
-                <span className="font-semibold text-sm">{selectedImage.name}</span>
-                <br />
+                Are you sure you want to delete this image?<br />
+                <span className="font-semibold text-sm">{selectedImage.name}</span><br />
                 This action cannot be undone.
               </p>
 
